@@ -90,36 +90,8 @@
         </main>
     </div>
 
-    <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+ 
 
-    <h4 style="margin-bottom:15px; color:#2c3e50;">Application Fee Payment</h4>
-    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c8e6c9;">
-        <p style="margin-bottom: 10px; color: #2e7d32; font-weight: bold;">
-            <i class="fa fa-money-bill-wave"></i> Application Fee: 500 BDT
-        </p>
-        
-        <div class="form-grid">
-            <div class="form-group">
-                <label>Payment Method</label>
-                <select name="payment_method" required>
-                    <option value="" disabled selected>Select Method</option>
-                    <option value="Bkash">Bkash</option>
-                    <option value="Nagad">Nagad</option>
-                    <option value="Rocket">Rocket</option>
-                    <option value="Bank Draft">Bank Draft</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Transaction ID (TrxID)</label>
-                <input type="text" name="trx_id" placeholder="e.g. 8JHS672K" required>
-                <small style="color:#666;">(For this demo, just type any random ID)</small>
-            </div>
-        </div>
-    </div>
-
-    <button type="submit" name="submit_application" class="btn-apply" style="background:#2da0a8; color:white; width: 100%; padding: 15px; font-size: 16px; font-weight:bold; border:none; border-radius:8px; cursor:pointer;">
-        Submit Application & Pay
-    </button>
 </form>
 </body>
 </html>

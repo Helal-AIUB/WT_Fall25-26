@@ -44,5 +44,26 @@ class CitizenModel {
         $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // --- BILLING FUNCTIONS ---
+
+    // 1. Fetch only UNPAID bills for this user
+    public function getUnpaidBills($userId) {
+        $sql = "SELECT * FROM trade_licenses 
+                WHERE user_id = ? AND payment_status = 'Unpaid' 
+                ORDER BY applied_at DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 2. Update the bill to PAID
+    public function payBill($billId, $method, $trxId) {
+        $sql = "UPDATE trade_licenses 
+                SET payment_status = 'Paid', payment_method = ?, trx_id = ? 
+                WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$method, $trxId, $billId]);
+    }
 }
 ?>

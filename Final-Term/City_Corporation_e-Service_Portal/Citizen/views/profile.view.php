@@ -27,7 +27,7 @@
                 <li><a href="index.php"><i class="fa fa-th-large"></i> Dashboard</a></li>
                 <li class="active"><a href="profile.php"><i class="fa fa-user-cog"></i> My Profile</a></li>
                 <li><a href="applications.php"><i class="fa fa-file-alt"></i> My Applications</a></li>
-                <li><a href="#"><i class="fa fa-credit-card"></i> Pay Bills</a></li>
+                <li><a href="billing.php"><i class="fa fa-credit-card"></i> Pay Bills</a></li>
                 <li class="logout"><a href="../../Home/public/logout.php"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>

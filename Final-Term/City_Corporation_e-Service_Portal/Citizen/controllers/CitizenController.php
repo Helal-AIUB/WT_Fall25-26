@@ -92,32 +92,46 @@ class CitizenController {
         include '../views/trade_license.view.php';
     }
 
-    // [Step 1] SUBMIT APPLICATION (Apply First, Pay Later)
     public function processTradeLicense() {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        $userId = $_SESSION['user_id'];
         
-        // 1. Get Form Data
-        $bName = $_POST['business_name'];
-        $bType = $_POST['business_type'];
-        $bAddress = $_POST['business_address'];
+        $userId = $_SESSION['user_id'];
+        $businessName = $_POST['business_name'];
+        $businessType = $_POST['business_type'];
+        $businessAddress = $_POST['business_address'];
         $capital = $_POST['trade_capital'];
 
-        // 2. Logic: Calculate Fee based on Capital
-        // Example: If capital > 5 Lakh, fee is 5000, else 2000
-        $fee = ($capital > 500000) ? 5000 : 2000; 
-
-        // 3. Set Defaults for "Apply First"
-        $paymentStatus = 'Unpaid';
-        $payMethod = NULL; // No payment yet
-        $trxId = NULL;     // No Trx ID yet
-
-        // 4. Save to DB 
-        // Note: Make sure your Model's createTradeLicense function accepts these 9 variables!
-        if ($this->model->createTradeLicense($userId, $bName, $bType, $bAddress, $capital, $payMethod, $trxId, $fee, $paymentStatus)) {
+        if ($this->model->createTradeLicense($userId, $businessName, $businessType, $businessAddress, $capital)) {
              echo "<script>
-                    alert('Application Submitted! A bill for $fee BDT has been generated. Please go to Pay Bills.');
-                    window.location.href = 'billing.php'; // Redirect to Pay Bills
+                    alert('Application Submitted Successfully!');
+                    window.location.href = 'index.php'; // Redirect to dashboard
+                  </script>";
+        } else {
+            echo "<script>alert('Application Failed. Please try again.');</script>";
+        }
+    }
+    // Inside CitizenController.php
+
+    public function processTradeLicense2() { // Your renamed function
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        
+        $userId = $_SESSION['user_id'];
+        $businessName = $_POST['business_name'];
+        $businessType = $_POST['business_type'];
+        $businessAddress = $_POST['business_address'];
+        $capital = $_POST['trade_capital'];
+        
+        // Ensure these NEW payment variables are here
+        $paymentMethod = $_POST['payment_method'];
+        $trxId = $_POST['trx_id'];
+        $fee = 500.00; 
+
+        // Make sure your Model function accepts these extra arguments!
+        // If you didn't rename the model function, this line is fine:
+        if ($this->model->createTradeLicense($userId, $businessName, $businessType, $businessAddress, $capital, $paymentMethod, $trxId, $fee)) {
+             echo "<script>
+                    alert('Application & Payment Submitted Successfully!');
+                    window.location.href = 'index.php'; 
                   </script>";
         } else {
             echo "<script>alert('Application Failed. Please try again.');</script>";
@@ -127,114 +141,13 @@ class CitizenController {
     public function showMyApplications() {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $userId = $_SESSION['user_id'];
+
+        $user = $this->model->getProfile($userId); //set user profile pic
         
-        $user = $this->model->getProfile($userId);
+        // Fetch all applications for this user
         $tradeLicenses = $this->model->getMyTradeLicenses($userId);
-        
-        // --- ADD THIS LINE ---
-        $nidApplications = $this->model->getNIDApplications($userId); 
-        // --------------------
         
         include '../views/applications.view.php';
     }
-
-    // --- BILLING CONTROLLER LOGIC ---
-
-    public function showBillingPage() {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $userId = $_SESSION['user_id'];
-        $user = $this->model->getProfile($userId);
-        
-        // 1. Get Trade License Bills
-        $tradeBills = $this->model->getUnpaidBills($userId);
-        
-        // 2. Get NID Bills (We need to filter for 'Unpaid' manually or add a model function)
-        // Let's add a quick helper in the model or just filter here.
-        // Better: Add getUnpaidNIDBills to Model.
-        $nidBills = $this->model->getUnpaidNIDBills($userId); 
-
-        // 3. Merge them for the View
-        // We will pass them separately to keep the view clean
-        
-        include '../views/billing.view.php';
-    }
-/*
-    public function processBillPayment() {
-        $billId = $_POST['bill_id'];
-        $method = $_POST['payment_method'];
-        $trxId  = $_POST['trx_id'];
-
-        if ($this->model->payBill($billId, $method, $trxId)) {
-            echo "<script>
-                    alert('Payment Successful! The official will review it soon.');
-                    window.location.href = 'billing.php';
-                  </script>";
-        } else {
-            echo "<script>alert('Payment Failed. Try again.');</script>";
-        }
-    }
-        */
-    public function processBillPayment() {
-        // 1. Get the Hidden Type from the Form
-        $billType = $_POST['bill_type']; // Must be 'trade' or 'nid'
-        $billId = $_POST['bill_id'];
-        $method = $_POST['payment_method'];
-        $trxId  = $_POST['trx_id'];
-
-        $success = false;
-
-        // 2. Switch Logic
-        if ($billType === 'trade') {
-            $success = $this->model->payBill($billId, $method, $trxId);
-        } elseif ($billType === 'nid') {
-            // This function MUST exist in your Model
-            $success = $this->model->payNIDBill($billId, $method, $trxId);
-        }
-
-        // 3. Result
-        if ($success) {
-            echo "<script>
-                    alert('Payment Successful!');
-                    window.location.href = 'billing.php';
-                  </script>";
-        } else {
-            echo "<script>alert('Payment Failed. Status did not update.');</script>";
-        }
-    }
-
-    // --- NID CORRECTION FUNCTIONS ---
-
-    public function showNIDForm() {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $userId = $_SESSION['user_id'];
-        $user = $this->model->getProfile($userId);
-        
-        // Basic Profile Check
-        if (empty($user['nid'])) {
-            echo "<script>alert('Please update your Profile with your NID number first!'); window.location.href='profile.php';</script>";
-            exit();
-        }
-
-        include '../views/nid_correction.view.php';
-    }
-
-    public function processNIDCorrection() {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $userId = $_SESSION['user_id'];
-        
-        $correctionType = $_POST['correction_type'];
-        $details = $_POST['details'];
-        $currentNid = $_POST['current_nid']; // From hidden field or user input
-
-        if ($this->model->createNIDApplication($userId, $currentNid, $correctionType, $details)) {
-             echo "<script>
-                    alert('Application Submitted! Please go to Pay Bills to complete the process.');
-                    window.location.href = 'billing.php'; 
-                  </script>";
-        } else {
-            echo "<script>alert('Application Failed. Please try again.');</script>";
-        }
-    }
-    
 }
 ?>

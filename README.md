@@ -1,6 +1,16 @@
 
 To view Project -> Final Term -> City Corporation e-Service Portal 
 
+## 🛠️ Technologies Used
+
+### Frontend
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![FontAwesome](https://img.shields.io/badge/Font%20Awesome-538DD7?style=for-the-badge&logo=font-awesome&logoColor=white)
+
+### Backend
+![PHP](
+
 Project Description
 The primary purpose of the City Corporation e-Service Portal is to digitize and streamline the delivery of essential municipal services. Traditionally, obtaining documents like trade licenses, NID corrections, or water connections requires physical visits to government offices, resulting in long waiting times and bureaucratic inefficiencies. This project aims to eliminate these barriers by providing a centralized online platform where citizens can access these services from their homes, ensuring transparency, speed, and accountability in public administration.
 

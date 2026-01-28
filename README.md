@@ -19,7 +19,7 @@ This project was developed using the following technologies:
     * Visual Studio Code (Code Editor)
     * XAMPP (Local Server Environment)
 
-Project Description
+##Project Description
 The primary purpose of the City Corporation e-Service Portal is to digitize and streamline the delivery of essential municipal services. Traditionally, obtaining documents like trade licenses, NID corrections, or water connections requires physical visits to government offices, resulting in long waiting times and bureaucratic inefficiencies. This project aims to eliminate these barriers by providing a centralized online platform where citizens can access these services from their homes, ensuring transparency, speed, and accountability in public administration.
 
 Project Overview: This web-based application functions as a bridge between citizens and city officials. The system is built using a secure MVC (Model-View-Controller) architecture to ensure data integrity and smooth performance.
